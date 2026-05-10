@@ -1,0 +1,47 @@
+name: Quarto Publish (R & Custom Packages)
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgmp-dev # gmp 패키지 컴파일용
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true # 리눅스용 바이너리 패키지를 우선 사용하여 설치 속도 최적화
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Install R Packages
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          install.packages(c("knitr", "rmarkdown", "ggplot2", "plot3D", "animation"))
+        shell: Rscript {0}
+
+      - name: Install Quarto Extension
+        run: |
+          quarto install extension mcanouil/quarto-collapse-output --no-prompt
+
+      - name: Render Quarto
+        run: quarto render
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
