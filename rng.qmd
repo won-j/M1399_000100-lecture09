@@ -147,7 +147,7 @@ saveGIF({
 }, movie.name = 'RANDU.gif')
 ```
 
-<img src="images/RANDU.gif" width="500" align="left">
+![](images/RANDU.gif){width=500}
 
 ```{r}
 #| output-fold: true
@@ -178,7 +178,7 @@ saveGIF({
 }, movie.name = 'MATLABRNG.gif')
 ```
 
-<img src="images/MATLABRNG.gif" width="500" align="left">
+![](images/MATLABRNG.gif){width=500}
 
 A simple modification is to introduce *shuffling* in the sequence, which we won't cover in detail.
 
